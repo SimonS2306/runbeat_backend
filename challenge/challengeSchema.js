@@ -3,12 +3,11 @@ var mongoose = require('mongoose');
 
 // Define our challenge schema
 var Challenge = new mongoose.Schema({
-
     title: String,
+    type: Number,
     instruction: String,
     difficulty: String,
-    accepted: Boolean,
-    finished: Boolean,
+    status: Number,
     participants : {
         sender : {
             type: mongoose.Schema.Types.ObjectId,

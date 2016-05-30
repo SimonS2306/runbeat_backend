@@ -10,7 +10,9 @@ var userSchema = mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    friendlist: {type: Array, "default": []}
+    
 });
 
 userSchema.pre('save', function(next) {
