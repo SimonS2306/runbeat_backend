@@ -1,3 +1,17 @@
 /**
- * Created by Christina on 01.06.2016.
+ * Load modules for application
  */
+
+angular.
+
+    module('RunBeatApp', [
+        'ui.router',
+        'ui.bootstrap'
+    ])
+
+    .constant('CONFIG',
+        {
+            DebugMode: true,
+            StepCounter: 0,
+            APIHost: 'http://localhost:12017'
+        });

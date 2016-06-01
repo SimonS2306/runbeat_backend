@@ -1,0 +1,26 @@
+div.footer{
+    text-align: center;
+}
+
+img.brand{
+    width: 100px;
+    height: 100px;
+}
+
+img.menuItem{
+    width: 80px;
+    height: 80px;
+    margin-bottom: 5px;
+}
+
+div.broad-header{
+    margin-top: 150px;
+}
+
+div.slim-header{
+    margin-top: 50px;
+}
+
+a.footer{
+    margin: 15px;
+}
