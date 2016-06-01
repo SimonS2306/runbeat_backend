@@ -53,3 +53,13 @@ app.use('/', userRoutes(passport));
 
 
 module.exports = app;
+
+console.log(app.port);
+
+var server = app.listen(Config.app.port, function () {
+
+    var host = server.address().address
+    var port = server.address().port
+    console.log("Example app listening at http://%s:%s", host, port)
+
+})
