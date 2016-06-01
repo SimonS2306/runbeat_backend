@@ -50,7 +50,7 @@ var challengeRoutes = require("./challenge/challengeRoutes");
 
 app.use('/api', challengeRoutes(passport));
 app.use('/', userRoutes(passport));
-
+app.use(express.static('frontend'));
 
 module.exports = app;
 

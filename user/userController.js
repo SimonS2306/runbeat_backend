@@ -1,8 +1,15 @@
 var Config = require('../config/config.js');
 var User = require('./userSchema');
 var jwt = require('jwt-simple');
+var file = '/Users/panfei/Documents/Self Learning/SEBA/seba_team40/frontend/index.html';
+
+module.exports.main = function(req,res){
+    res.status(400).sendFile(file);
+}
 
 module.exports.login = function(req, res){
+
+    console.log("hahahahaha" + req + res);
 
     if(!req.body.username){
         res.status(400).send('username required');
