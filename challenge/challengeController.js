@@ -5,9 +5,9 @@ exports.postChallenge = function(req, res) {
     var challenge = new Challenge(req.body);
 
     //do not allow user to fake identity. The user who posted the challenge must be the same user that is logged in
-    if (!req.user.equals(challenge.participants.sender)) {
-        res.sendStatus(401);
-    }
+    //if (!req.user.equals(challenge.participants.sender)) {
+    //    res.sendStatus(401);
+    //}
 
     challenge.save(function(err, m) {
         if (err) {
@@ -47,7 +47,7 @@ exports.getChallenge = function(req, res) {
 // Create endpoint /api/challenges/:challenge_id for PUT
 exports.putChallenge = function(req, res) {
     // Use the Beer model to find a specific beer
-    challenge.findByIdAndUpdate(
+    Challenge.findByIdAndUpdate(
         req.params.challenge_id,
         req.body, 
         {
@@ -68,7 +68,7 @@ exports.putChallenge = function(req, res) {
 // Create endpoint /api/challenges/:challenge_id for DELETE
 exports.deleteChallenge = function(req, res) {
     // Use the Beer model to find a specific beer and remove it
-    challenge.findById(req.params.challenge_id, function(err, m) {
+    Challenge.findById(req.params.challenge_id, function(err, m) {
         if (err) {
             res.status(500).send(err);
             return;

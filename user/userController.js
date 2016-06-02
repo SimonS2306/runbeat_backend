@@ -2,6 +2,13 @@ var Config = require('../config/config.js');
 var User = require('./userSchema');
 var jwt = require('jwt-simple');
 
+var file = '/Users/sspitzer/WebstormProjects/runbeat_backend/runbeat_frontend/index.html';
+
+
+module.exports.main = function(req,res){
+    res.status(400).sendFile(file);
+};
+
 module.exports.login = function(req, res){
 
     if(!req.body.username){
