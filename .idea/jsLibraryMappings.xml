@@ -2,7 +2,7 @@
 <project version="4">
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{runbeat_backend node_modules}" />
-    <file url="PROJECT" libraries="{angular-http-auth-DefinitelyTyped, angularjs-DefinitelyTyped, async-DefinitelyTyped, base-x-DefinitelyTyped, bcrypt-DefinitelyTyped, bluebird-DefinitelyTyped, body-parser-DefinitelyTyped, bootstrap-DefinitelyTyped, bson-DefinitelyTyped, buffer-equal-DefinitelyTyped, bytes-DefinitelyTyped, camelcase-DefinitelyTyped, core-js-DefinitelyTyped, cors-DefinitelyTyped, express-DefinitelyTyped, express-unless-DefinitelyTyped, jwt-simple-DefinitelyTyped, mongodb-DefinitelyTyped, mongoose-DefinitelyTyped, mongoose-auto-increment-DefinitelyTyped, mongoose-deep-populate-DefinitelyTyped, node-DefinitelyTyped, node-sass-DefinitelyTyped, passport-DefinitelyTyped, pathjs-DefinitelyTyped}" />
+    <file url="PROJECT" libraries="{angular-http-auth-DefinitelyTyped, angularjs-DefinitelyTyped, async-DefinitelyTyped, base-x-DefinitelyTyped, bcrypt-DefinitelyTyped, bluebird-DefinitelyTyped, body-parser-DefinitelyTyped, bootstrap-DefinitelyTyped, bson-DefinitelyTyped, buffer-equal-DefinitelyTyped, bytes-DefinitelyTyped, camelcase-DefinitelyTyped, core-js-DefinitelyTyped, cors-DefinitelyTyped, express-DefinitelyTyped, express-unless-DefinitelyTyped, jwt-simple-DefinitelyTyped, mongodb-DefinitelyTyped, mongoose-DefinitelyTyped, mongoose-auto-increment-DefinitelyTyped, mongoose-deep-populate-DefinitelyTyped, node-DefinitelyTyped, node-sass-DefinitelyTyped, passport-DefinitelyTyped, passport-local-DefinitelyTyped, pathjs-DefinitelyTyped}" />
     <includedPredefinedLibrary name="ECMAScript 6" />
     <includedPredefinedLibrary name="WebGL" />
   </component>
