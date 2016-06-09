@@ -2,13 +2,6 @@ var Config = require('../config/config.js');
 var User = require('./userSchema');
 var jwt = require('jwt-simple');
 
-var file = '/Users/sspitzer/WebstormProjects/runbeat_backend/runbeat_frontend/index.html';
-
-
-module.exports.main = function(req,res){
-    res.status(400).sendFile(file);
-};
-
 module.exports.login = function(req, res){
 
     if(!req.body.username){
@@ -41,7 +34,7 @@ module.exports.login = function(req, res){
 
 };
 
-module.exports.signup = function(req, res){
+module.exports.register = function(req, res){
     if(!req.body.username){
         res.status(400).send('username required');
         return;
@@ -66,7 +59,7 @@ module.exports.signup = function(req, res){
     });
 };
 
-module.exports.unregister = function(req, res) {
+module.exports.logout = function(req, res) {
     req.user.remove().then(function () { //or .then/function(user)...?
         res.sendStatus(200);
     }, function(err){

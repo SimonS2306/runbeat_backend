@@ -10,8 +10,11 @@ var userSchema = mongoose.Schema({
     password: {
         type: String,
         required: true
-    },
-    friendlist: {type: Array, "default": []}
+    }
+    //friendlist: {type: Array, "default": []},
+    //credo: String
+    //picture: file
+    
     
 });
 

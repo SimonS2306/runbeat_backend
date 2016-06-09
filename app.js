@@ -48,21 +48,10 @@ jwtConfig(passport);
 var userRoutes = require("./user/userRoutes");
 var challengeRoutes = require("./challenge/challengeRoutes");
 
-//app.use(router);
-app.use('/api', challengeRoutes());//changed it from challengeRoutes(passport)
-app.use('/', userRoutes(passport));
-//app.use('/static', express.static('/Users/sspitzer/WebstormProjects/runbeat_frontend'));
-app.use(express.static('/Users/sspitzer/WebstormProjects/runbeat_frontend'));
+app.use('/api/', challengeRoutes(passport));//changed it from challengeRoutes(passport)
+app.use('/user/', userRoutes(passport));
 
 
 module.exports = app;
 
-/*console.log(app.port);
-
-var server = app.listen(Config.app.port, function () {
-
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log("Example app listening at http://%s:%s", host, port);
-
-});*/
+console.log(app.port);

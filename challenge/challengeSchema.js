@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 // Define our challenge schema
 var Challenge = new mongoose.Schema({
     title: String,
-    type: Number,
+    type: Number, // 1 = circle, 2 = triangle
     instruction: String,
     difficulty: String,
     status: Number,

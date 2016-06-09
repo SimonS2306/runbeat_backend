@@ -5,9 +5,9 @@ exports.postChallenge = function(req, res) {
     var challenge = new Challenge(req.body);
 
     //do not allow user to fake identity. The user who posted the challenge must be the same user that is logged in
-    //if (!req.user.equals(challenge.participants.sender)) {
-    //    res.sendStatus(401);
-    //}
+    if (!req.user.equals(challenge.participants.sender)) {
+        res.sendStatus(401);
+
 
     challenge.save(function(err, m) {
         if (err) {
@@ -17,7 +17,7 @@ exports.postChallenge = function(req, res) {
 
         res.status(201).json(m);
     });
-};
+}};
 
 // Create endpoint /api/challenges for GET
 exports.getChallenges = function(req, res) {
