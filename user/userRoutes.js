@@ -36,28 +36,28 @@ router.post('/register', function(req, res) {
         });
 });
 
-router.post('/login', function(req, res, next) {
-    passport.authenticate('local', function(err, user, info) {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            return res.status(401).json({
-                err: info
-            });
-        }
-        req.logIn(user, function(err) {
+    router.post('/login', function(req, res, next) {
+        passport.authenticate('local', function(err, user, info) {
             if (err) {
-                return res.status(500).json({
-                    err: 'Could not log in user'
+                return next(err);
+            }
+            if (!user) {
+                return res.status(401).json({
+                    err: info
                 });
             }
-            res.status(200).json({
-                status: 'Login successful!'
+            req.logIn(user, function(err) {
+                if (err) {
+                    return res.status(500).json({
+                        err: 'Could not log in user'
+                    });
+                }
+                res.status(200).json({
+                    status: 'Login successful!'
+                });
             });
-        });
-    })(req, res, next);
-});
+        })(req, res, next);
+    });
 
 router.get('/logout', function(req, res) {
     req.logout();
