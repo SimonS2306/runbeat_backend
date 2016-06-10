@@ -1,15 +1,21 @@
 var Config = require('../config/config.js');
 var User = require('./userSchema');
 var jwt = require('jwt-simple');
-var file = '/Users/panfei/Documents/Self Learning/SEBA/seba_team40/frontend/index.html';
+var mainPage = '/Users/panfei/Documents/Self Learning/SEBA/seba_team40/frontend/index.html';
+var loginPage = '/Users/panfei/Documents/Self Learning/SEBA/seba_team40/frontend/app/shared/login.view.html';
 
 module.exports.main = function(req,res){
-    res.status(400).sendFile(file);
+    //res.redirect('/login');
+    res.status(200).sendFile(mainPage);
+}
+
+module.exports.loginPage = function(req,res){
+    res.status(200).sendFile(loginPage);
 }
 
 module.exports.login = function(req, res){
 
-    console.log("hahahahaha" + req + res);
+    console.log("hahahahaha" + req.body + res.body);
 
     if(!req.body.username){
         res.status(400).send('username required');

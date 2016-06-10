@@ -52,6 +52,7 @@ app.use('/api', challengeRoutes(passport));
 app.use('/', userRoutes(passport));
 app.use(express.static('frontend'));
 
+
 module.exports = app;
 
 console.log(app.port);
