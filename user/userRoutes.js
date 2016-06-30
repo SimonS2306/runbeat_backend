@@ -35,6 +35,9 @@ router.post('/register', function(req, res) {
             });
         });
 });
+    router.post('/updateProfile', function(req, res) {
+     console.log(req);
+    });
 
     router.post('/login', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
@@ -52,6 +55,7 @@ router.post('/register', function(req, res) {
                         err: 'Could not log in user'
                     });
                 }
+                console.log(res);
                 res.status(200).json({
                     status: 'Login successful!'
                 });
