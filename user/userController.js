@@ -69,6 +69,7 @@ module.exports.unregister = function(req, res) {
 
 module.exports.logout = function(req,res){
     req.logout();
+    
     res.status(200).json({
         status: 'Logout successful'
     });

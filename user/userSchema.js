@@ -11,11 +11,7 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        required: false,
-        unique: false
-    },
+    email: String,
     credo: {
         type: String,
         required: false,
@@ -30,7 +26,13 @@ var userSchema = mongoose.Schema({
         type: String,
         required: false,
         unique: false
+    },
+    friends: {
+        type: [String],
+        required:false,
+        unique: false
     }
+
 });
 
 userSchema.pre('save', function(next) {
