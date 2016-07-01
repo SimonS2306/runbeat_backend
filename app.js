@@ -17,52 +17,29 @@ mongoose.connect([Config.db.host, '/', Config.db.name].join(''),{
  */
 
 var express = require('express');
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var expressSession = require('express-session');
-var hash = require('bcrypt-nodejs');
-var path = require('path');
 var cors = require('cors');
-var passport = require('passport');
-var localStrategy = require('passport-local' ).Strategy;
 
+var app = express();
 
 /**
  * app setup
  */
-var User = require('./user/userSchema.js');
-var app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
-}))
-;
-
-//passport config
-//var jwtConfig = require('./passport/jwtConfig');
-
-
-// define middleware
-
-app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(require('express-session')({
-    secret: 'very secret secret',
-    resave: false,
-    saveUninitialized: false
 }));
-app.use(passport.initialize());
-app.use(passport.session());
 
-// configure passport
-passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+
+//passport
+
+var passport = require('passport');
+var jwtConfig = require('./passport/jwtConfig');
+
+app.use(passport.initialize());
+jwtConfig(passport);
 
 /**
  * routing

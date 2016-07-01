@@ -1,4 +1,3 @@
-
 module.exports = challengeRoutes;
 
 function challengeRoutes() { /*changed it from challengeRoutes(passport)*/
