@@ -68,9 +68,63 @@ module.exports.unregister = function(req, res) {
 };
 
 module.exports.logout = function(req,res){
-
-
+    req.logout();
+    res.status(200).json({
+        status: 'Logout successful'
+    });
 }
+
+module.exports.getUsers = function(req, res) {
+    User.find(function(err, users) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.json(users);
+    });
+};
+
+exports.getUser = function(req, res) {
+    User.findOne({username: req.body.username}, function(err, user) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        if(!user){
+            res.status(400).send("Email not found!");
+            return;
+        }
+        if(user.password != req.body.password){
+            res.status(400).send("Incorrect password!");
+            return;
+        }
+        console.log("Current User: " + user);
+        res.json(user);
+    });
+};
+
+exports.putUser = function(req, res) {
+    User.find({username: req.body.username}, function(err, user) {
+    });
+
+};
+
+exports.deleteUser = function(req, res) {
+    User.findById(req.params.user_id, function(err, m) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        //authorize
+        if (m.user && req.user.equals(m.user)) {
+            m.remove();
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(401);
+        }
+
+    });
+};
 
 function createToken(user) {
     var tokenPayload = {

@@ -48,8 +48,8 @@ jwtConfig(passport);
 var userRoutes = require("./user/userRoutes.js");
 var challengeRoutes = require("./challenge/challengeRoutes.js");
 
-app.use('/api/', challengeRoutes(passport));//changed it from challengeRoutes(passport)
-app.use('/user/', userRoutes(passport));
+app.use('/api', challengeRoutes(passport));//changed it from challengeRoutes(passport)
+app.use('/user', userRoutes(passport));
 
 module.exports = app;
 

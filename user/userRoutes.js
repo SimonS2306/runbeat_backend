@@ -9,7 +9,12 @@ function userRoutes(passport) {
     router.post('/login', userController.login);
     router.post('/register', userController.register);
     router.post('/unregister', passport.authenticate('jwt', {session: false}),userController.unregister);
-
+    router.get('/logout', userController.logout);
+    router.get('/user', userController.getUser);
+    router.put('/user', userController.putUser);
+    router.delete('/user', userController.deleteUser);
+    router.get('/users', userController.getUsers);
+    
     return router;
 
 }
