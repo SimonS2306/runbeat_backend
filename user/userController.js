@@ -91,7 +91,7 @@ exports.getUser = function(req, res) {
             return;
         }
         if(!user){
-            res.status(400).send("Email not found!");
+            res.status(400).send("Username not found");
             return;
         }
         if(user.password != req.body.password){
