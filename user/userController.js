@@ -1,6 +1,7 @@
 var Config = require('../config/config.js');
 var User = require('./userSchema');
 var jwt = require('jwt-simple');
+var mongoose = require('mongoose');
 
 module.exports.login = function(req, res){
 
@@ -27,6 +28,7 @@ module.exports.login = function(req, res){
             if(!isMatch || err){
                 res.status(401).send('Invalid Credentials');
             } else {
+                console.log(createToken(user));
                 res.status(200).json({token: createToken(user)});
             }
         });
@@ -54,7 +56,6 @@ module.exports.register = function(req, res){
             res.status(500).send(err);
             return;
         }
-
         res.status(201).json({token: createToken(user)});
     });
 };
@@ -105,7 +106,19 @@ exports.getUser = function(req, res) {
 };
 
 exports.putUser = function(req, res) {
-    User.find({username: req.body.username}, function(err, user) {
+    console.log('updating user');
+    console.log(req.body);
+    User.find({username: req.body.username}, function(err, doc) {
+console.log('inside find');
+        console.log(doc);
+         var condition= {username: req.body.username}
+         , update = {username : '1234567' , email : 'abc1@gmail.com'};
+       User.findOneAndUpdate(condition,update,{updert : true},function (err,doc) {
+           console.log('inside update method');
+           if(err) return res.send(500,{error : err});
+           return res.send("success saved");
+
+       })
     });
 
 };

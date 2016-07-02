@@ -1,7 +1,7 @@
 module.exports = userRoutes;
 
 function userRoutes(passport) {
-
+console.log('in USer Router');
     var userController = require('./userController');
     var router = require('express').Router();
 
@@ -11,7 +11,7 @@ function userRoutes(passport) {
     router.post('/unregister', passport.authenticate('jwt', {session: false}),userController.unregister);
     router.get('/logout', userController.logout);
     router.get('/user', userController.getUser);
-    router.put('/user', userController.putUser);
+    router.post('/update', userController.putUser);
     router.delete('/user', userController.deleteUser);
     router.get('/users', userController.getUsers);
     
