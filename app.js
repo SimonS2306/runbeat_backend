@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 mongoose.connect([Config.db.host, '/', Config.db.name].join(''),{
     //eventually it's a good idea to make this secure
     user: Config.db.user,
+    profile: Config.db.profile,
     pass: Config.db.pass
 });
 
@@ -47,9 +48,12 @@ jwtConfig(passport);
 
 var userRoutes = require("./user/userRoutes");
 var challengeRoutes = require("./challenge/challengeRoutes");
+var profileRoutes = require("./profile/profileRoutes");
+
 
 app.use('/api', challengeRoutes(passport));
 app.use('/', userRoutes(passport));
+app.use('/', profileRoutes(passport));
 app.use(express.static('frontend'));
 
 
@@ -57,10 +61,10 @@ module.exports = app;
 
 console.log(app.port);
 
-var server = app.listen(Config.app.port, function () {
+/*var server = app.listen(Config.app.port, function () {
 
     var host = server.address().address
     var port = server.address().port
     console.log("Example app listening at http://%s:%s", host, port)
 
-})
+})*/

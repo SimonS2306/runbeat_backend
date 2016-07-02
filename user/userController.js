@@ -1,16 +1,16 @@
 var Config = require('../config/config.js');
 var User = require('./userSchema');
+var Profile = require('../profile/profileSchema');
 var jwt = require('jwt-simple');
-var mainPage = '/Users/panfei/Documents/Self Learning/SEBA/seba_team40/frontend/index.html';
-var loginPage = '/Users/panfei/Documents/Self Learning/SEBA/seba_team40/frontend/app/shared/login.view.html';
+
+
 
 module.exports.main = function(req,res){
-    //res.redirect('/login');
-    res.status(200).sendFile(mainPage);
+
 }
 
 module.exports.loginPage = function(req,res){
-    res.status(200).sendFile(loginPage);
+
 }
 
 module.exports.login = function(req, res){
@@ -64,11 +64,27 @@ module.exports.signup = function(req, res){
 
     user.save(function(err) {
         if (err) {
-            res.status(500).send(err);
+            res.status(500).json("Existing user name!");
             return;
         }
 
-        res.status(201).json({token: createToken(user)});
+        var emptyProfile = new Profile();
+        emptyProfile.name = user.username;
+        emptyProfile.firstName = "John";
+        emptyProfile.lastName = "Deo";
+        emptyProfile.birthday = "1970-1-1";
+        emptyProfile.profileImagePath = "null";
+
+        console.log(emptyProfile);
+        emptyProfile.save(function (error, resp){
+            if (error) {
+                res.status(500).json("Server Failed!");
+                console.log(error);
+                return;
+            }
+            res.status(201).json({token: createToken(user)});
+        })
+
     });
 };
 
@@ -79,6 +95,17 @@ module.exports.unregister = function(req, res) {
         res.status(500).send(err);
     });
 };
+
+module.exports.updateProfile = function(req, res){
+    var name = req.params.name;
+    res.json(name);
+}
+
+module.exports.viewProfile = function(req, res){
+    var name = req.params.name;
+    res.json(name);
+}
+
 
 function createToken(user) {
     var tokenPayload = {
