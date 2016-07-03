@@ -1,0 +1,45 @@
+{
+  "name": "moviebass",
+  "version": "1.0.0",
+  "description": "Movie backend as a service",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/sebischair/sebamaster-movie-backend"
+  },
+  "keywords": [
+    "movie-backend",
+    "seba",
+    "master"
+  ],
+  "author": "sebis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bitbucket.org/sebischair/sebamaster-movie-backend"
+  },
+  "homepage": "https://bitbucket.org/sebischair/sebamaster-movie-backend#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.7.1",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "express-unless": "^0.3.0",
+    "gridfs-stream": "^1.1.1",
+    "jwt-simple": "^0.5.0",
+    "mongoose": "^4.4.6",
+    "morgan": "^1.7.0",
+    "multer": "^1.1.0",
+    "passport": "^0.3.2",
+    "passport-jwt": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.0.0"
+  },
+  "devDependencies": {
+    "supertest": "^1.2.0"
+  }
+}
