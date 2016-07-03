@@ -77,7 +77,7 @@ exports.getChallenges_2 = function(req, res) {
 };
 
 //3: Challenge accepted by sender and receiver
-// Needs as the request the wanted user, gives back all ongoing challenges
+// Needs as the request the challenge sender, gives back all ongoing challenges
 
 exports.getChallenges_3 = function(req, res) {
     Challenge.find(function(err, challenges) {
@@ -114,7 +114,7 @@ exports.updateChallenge4 = function(req, res) {
 };
 
 //4: Challenge finished
-//needs as request the wanted user, gives back all finished challenges
+//needs as request challenge sender, gives back all finished challenges
 
 exports.getChallenges_4 = function(req, res) {
     Challenge.find(function(err, challenges) {
