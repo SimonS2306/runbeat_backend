@@ -4,6 +4,7 @@ var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 var mime= require("mime");
 var multer =require("multer");
+var FriendReq = require("./friendReqSchema");
 
 module.exports.login = function(req, res){
 
@@ -159,3 +160,198 @@ function createToken(user) {
     };
     return jwt.encode(tokenPayload,Config.auth.jwtSecret);
 };
+
+
+/* From Fei */
+
+
+exports.getFriends = function(req, res){
+    User.findOne({username: req.params.name}, function(err, user){
+        var data = [];
+        if (user) {
+            if (user.friends.length > 0) {
+                for (i=0; i< user.friends.length; i++) {
+                    var friend = user.friends[i];
+                    User.findOne({username: friend}, function (error, userFriend) {
+                        // console.log(friend + "   " + userFriend)
+                        data.push(userFriend);
+                        if (data.length === user.friends.length) {
+                            res.status(200).json(data);
+                        }
+                    });
+                }
+            } else {
+                res.status(200).json(data);
+            }
+        } else {
+            res.status(400).json("No such user");
+        }
+
+    });
+}
+
+
+exports.addFriendRequest = function(req, res){
+    var request = new FriendReq();
+    request.sender = req.body.sender;
+    request.receiver = req.body.receiver;
+    request.status = 0;
+    request.save();
+    res.status(200).send();
+}
+
+exports.deleteFriendRequest = function(req, res){
+    var id = req.params.id;
+    var request = FriendReq.find({_id: id});
+    request.remove(function (err, deletedreq){
+        if (err) {
+            res.status(500).json("server error");
+            return;
+        }
+        res.status(200).json("delete successfully");
+    });
+}
+
+exports.getFriendRequests = function(req, res){
+    var username = req.params.username;
+    FriendReq.find({receiver: username}, function(err, requests){
+        if (err) {
+            res.status(500).json("sever is not available");
+            return;
+        }
+        var data = [];
+        // console.log(requests);
+        if (requests) {
+            res.status(200).json(requests);
+
+        } else {
+            res.status(200).json(data);
+        }
+    });
+}
+
+exports.acceptFriendRequest = function(req, res){
+    var id = req.params.id;
+    FriendReq.findOne({_id: id}, function(err, request){
+        if (err) {
+            res.status(500).json("sever is not available");
+            return;
+        }
+        if (!request){
+            res.status(400).json("there is no such request");
+            return;
+        }
+        /*  1. update sender   */
+        User.findOne({username: request.sender}, function(err, sender){
+            if (err) {
+                res.status(500).json("sever is not available");
+                return;
+            }
+            if (!sender){
+                res.status(400).json("there is no such sender");
+                return;
+            }
+            if (!sender.friends) {
+                sender.friends = [];
+            }
+            //  console.log(sender);
+            //  console.log(request.receiver);
+            sender.friends.push(request.receiver);
+            // console.log(sender);
+            sender.update(sender, {name: request.sender}, function(err){
+                if (err) {
+                    res.status(500).json("sever is not available");
+                    return;
+                }
+                /*  2. update receiver   */
+                User.findOne({username: request.receiver}, function(err, receiver) {
+                    if (err) {
+                        res.status(500).json("sever is not available");
+                        return;
+                    }
+                    if (!receiver) {
+                        res.status(400).json("there is no such receiver");
+                        return;
+                    }
+                    receiver.friends.push(request.sender);
+                    receiver.update(receiver, {name: request.receiver}, function (err) {
+                        if (err) {
+                            res.status(500).json("sever is not available");
+                            return;
+                        }
+                        /*  3. delete friendreq   */
+                        request.remove(function (err, deletedreq){
+                            if (err) {
+                                res.status(500).json("server error");
+                                return;
+                            }
+                            res.status(200).json("accept succesful");
+                        });
+
+                    });
+                });
+            });
+        });
+
+
+    });
+}
+
+exports.deleteFriend = function(req,res){
+    var username = req.body.username;
+    var deletedFriend = req.body.deletedFriend;
+
+    User.findOne({username: username}, function(err, user){
+        if (err){
+            res.status(500).json("sever is not available");
+            return;
+        }
+        if (!user) {
+            res.status(400).json("No such user");
+            return;
+        }
+        // console.log(user.friends);
+        var index = user.friends.indexOf(deletedFriend);
+        user.friends.splice(index, 1);
+        User.update(user, {username: user.username}, function (err) {
+            if (err){
+                res.status(500).json("sever is not available");
+                return;
+            }
+            User.findOne({username: deletedFriend}, function(err, delF){
+                if (err){
+                    res.status(500).json("sever is not available");
+                    return;
+                }
+                if (!delF) {
+                    res.status(400).json("No such user");
+                    return;
+                }
+                var index = delF.friends.indexOf(username);
+                delF.friends.splice(index, 1);
+                delF.update(delF, {username: delF.username}, function (err) {
+                    if (err) {
+                        res.status(500).json("sever is not available");
+                        return;
+                    }
+                    res.status(200).json("delete friend succesful");
+                });
+            });
+        });
+
+    });
+
+
+}
+
+exports.searchUser = function(req, res){
+    var username = req.params.username;
+    User.find({username: {$regex: username, $options: '-i'}}, function(error, users){
+        if (error) {
+            res.status(500).json("Server is not available");
+        }
+        res.status(200).json(users);
+    });
+
+
+}

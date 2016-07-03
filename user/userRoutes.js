@@ -14,7 +14,16 @@ console.log('in USer Router');
     router.post('/update', userController.putUser);
     router.delete('/user', userController.deleteUser);
     router.get('/users', userController.getUsers);
-    
+    /* From Fei */
+    router.get('/friends/:name', userController.getFriends);
+    router.post('/friendreq', userController.addFriendRequest);
+    router.delete('/friendreq/:id', userController.deleteFriendRequest);
+    router.put('/friendreq/:id', userController.acceptFriendRequest)
+    router.get('/allfriendreqs/:username',  userController.getFriendRequests);
+    router.delete('/friend', userController.deleteFriend);
+    router.get('/searchUser/:username', userController.searchUser);
+
+
     return router;
 
 }
