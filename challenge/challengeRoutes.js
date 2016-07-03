@@ -14,8 +14,18 @@ function challengeRoutes() { /*changed it from challengeRoutes(passport)*/
 
     router.route('/challenges')
         .post(challengeController.postChallenge)
-        .get(challengeController.getChallenges);
-
+    router.route('/challenges1')
+        .get(challengeController.getChallenges_1)
+    router.route('/challenges2')
+        .get(challengeController.getChallenges_2)
+    router.route('/challenges3')
+        .get(challengeController.getChallenges_3)
+    router.route('/challenges4')
+        .get(challengeController.getChallenges_4)
+    router.route('/update3')
+        .get(challengeController.updateChallenge3)
+    router.route('/update4')
+        .get(challengeController.updateChallenge4)
     router.route('/challenges/:challenge_id')
         .get(challengeController.getChallenge)
         .put(challengeController.putChallenge)
