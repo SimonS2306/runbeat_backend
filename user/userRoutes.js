@@ -1,7 +1,7 @@
 module.exports = userRoutes;
 
 function userRoutes(passport) {
-console.log('in USer Router');
+console.log('in userRoutes');
     var userController = require('./userController');
     var router = require('express').Router();
 

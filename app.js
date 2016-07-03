@@ -47,10 +47,11 @@ jwtConfig(passport);
 
 var userRoutes = require("./user/userRoutes.js");
 var challengeRoutes = require("./challenge/challengeRoutes.js");
+var profileRoutes = require("./profile/profileRoutes");
 console.log('inside app.js');
 app.use('/api', challengeRoutes(passport));//changed it from challengeRoutes(passport)
 app.use('/user', userRoutes(passport));
-
+app.use('/profile', profileRoutes(passport));
 module.exports = app;
 
 console.log(app.port);

@@ -7,15 +7,16 @@ var Challenge = new mongoose.Schema({
     type: Number, // 1 = circle, 2 = triangle
     instruction: String,
     difficulty: String,
-    status: Number,
-    participants : {
+    open: Boolean,
+
         sender : {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         },
         receiver: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'}}});
+            ref: 'User'}
+});
 
 // Export the Mongoose model
 module.exports = mongoose.model('Challenge', Challenge);

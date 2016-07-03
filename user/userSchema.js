@@ -10,7 +10,7 @@ var userSchema = mongoose.Schema({
     password: {
         type: String,
         required: true
-    },
+    }/*,
     email: String,
     credo: {
         type: String,
@@ -28,10 +28,10 @@ var userSchema = mongoose.Schema({
         unique: false
     },
     friends: {
-        type: [String],
+        type: [Array],
         required:false,
         unique: false
-    }
+    }*/
 
 });
 
@@ -61,6 +61,15 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
         cb(null, isMatch);
     });
 };
+
+/*userSchema.methods.updateUser = function(req, res){
+
+    this.user.email = req.body.name;
+    this.user.credo = req.body.address;
+    this.user.forename = req.body.forename;
+    this.user.surname = req.body.surname;
+    this.user.save();
+};*/
 
 
 var User = mongoose.model('User', userSchema);

@@ -1,5 +1,6 @@
 var Config = require('../config/config.js');
 var User = require('./userSchema');
+var Profile = require('../profile/profileSchema');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 
@@ -53,12 +54,40 @@ module.exports.register = function(req, res){
 
     user.save(function(err) {
         if (err) {
-            res.status(500).send(err);
+            res.status(500).json("Existing user name!");
             return;
         }
-        res.status(201).json({token: createToken(user)});
+
+        var emptyProfile = new Profile();
+        emptyProfile.name = user.username;
+        emptyProfile.firstName = "John";
+        emptyProfile.lastName = "Deo";
+        emptyProfile.birthday = "23.06.1993";
+        emptyProfile.profileImagePath = "null";
+        emptyProfile.credo = "Don't hate the player, hate the game!"
+
+        console.log(emptyProfile);
+        emptyProfile.save(function (error, resp){
+            if (error) {
+                res.status(500).json("Server Failed!");
+                console.log(error);
+                return;
+            }
+            res.status(201).json({token: createToken(user)});
+        })
+
     });
 };
+
+module.exports.updateProfile = function(req, res){
+    var name = req.params.name;
+    res.json(name);
+}
+
+module.exports.viewProfile = function(req, res){
+    var name = req.params.name;
+    res.json(name);
+}
 
 module.exports.unregister = function(req, res) {
     req.user.remove().then(function (user) {
@@ -70,7 +99,6 @@ module.exports.unregister = function(req, res) {
 
 module.exports.logout = function(req,res){
     req.logout();
-    
     res.status(200).json({
         status: 'Logout successful'
     });
