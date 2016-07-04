@@ -1,5 +1,8 @@
 module.exports = userRoutes;
 
+var multer = require("multer");
+var upload = multer({dest: './uploads/'});
+
 function userRoutes(passport) {
 console.log('in USer Router');
     var userController = require('./userController');
@@ -22,7 +25,8 @@ console.log('in USer Router');
     router.get('/allfriendreqs/:username',  userController.getFriendRequests);
     router.delete('/friend', userController.deleteFriend);
     router.get('/searchUser/:username', userController.searchUser);
-
+    router.post('/image/upload/:username', upload.single("profileImage"), userController.uploadProfileImage);
+    router.get('/image/:id', userController.downloadProfileImage);
 
     return router;
 

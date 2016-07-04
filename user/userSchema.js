@@ -71,6 +71,41 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
     });
 };
 
+module.exports.uploadProfileImage = function(req, res){
+
+    var name = req.params.name;
+    console.log(req.body);
+    console.log(req.file);
+
+    var type = req.file.mimetype;
+    Profile.findOne({name: name}, function(err, profile){
+        if (err){
+            res.status(500).send("Server is not available");
+            return;
+        }
+        if (!profile) {
+            res.status(401).send('No such user!'+name);
+            return;
+        }
+        profile.profileImagePath = req.file.name;
+        res.status(200).json("upload profile image successful");
+    });
+
+    ;
+}
+
+module.exports.downloadProfileImage = function(req, res){
+    var pic_id = req.params.id;
+    var path = "./uploads/" + pic_id;
+
+    var mine = "image/jpeg";
+
+    res.setHeader('Content-disposition', 'attachment; filename=' + pic_id);
+    res.setHeader('Content-type', mine);
+
+    var fileStream = fs.createReadStream(path);
+    fileStream.pipe(res);
+}
 
 var User = mongoose.model('User', userSchema);
 

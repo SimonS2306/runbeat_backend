@@ -5,6 +5,9 @@ var mongoose = require('mongoose');
 var mime= require("mime");
 var multer =require("multer");
 var FriendReq = require("./friendReqSchema");
+var Grid = require("gridfs-stream");
+Grid.mongo = mongoose.mongo;
+var fs = require('fs');
 
 module.exports.login = function(req, res){
 
@@ -351,7 +354,7 @@ exports.deleteFriend = function(req,res){
 
 exports.searchUser = function(req, res){
     var username = req.params.username;
-    User.find({username: {$regex: username, $options: '-i'}}, function(error, users){
+    User.find({username: {$regex: username, $options: 'i'}}, function(error, users){
         if (error) {
             res.status(500).json("Server is not available");
         }
@@ -359,4 +362,41 @@ exports.searchUser = function(req, res){
     });
 
 
+}
+
+
+module.exports.uploadProfileImage = function(req, res){
+
+    var name = req.params.username;
+    console.log(req.body);
+    console.log(req.file);
+
+    var type = req.file.mimetype;
+    User.findOne({username: name}, function(err, user){
+        if (err){
+            res.status(500).send("Server is not available");
+            return;
+        }
+        if (!user) {
+            res.status(401).send('No such user!'+name);
+            return;
+        }
+        user.profileImagePath = req.file.name;
+        res.status(200).json("upload profile image successful");
+    });
+
+    ;
+}
+
+module.exports.downloadProfileImage = function(req, res){
+    var pic_id = req.params.id;
+    var path = "./uploads/" + pic_id;
+
+    var mine = "image/jpeg";
+
+    res.setHeader('Content-disposition', 'attachment; filename=' + pic_id);
+    res.setHeader('Content-type', mine);
+
+    var fileStream = fs.createReadStream(path);
+    fileStream.pipe(res);
 }
