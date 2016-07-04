@@ -90,7 +90,8 @@ module.exports.getUsers = function(req, res) {
 };
 
 exports.getUser = function(req, res) {
-    User.findOne({username: req.body.username}, function(err, user) {
+    console.log('Hello from get user '+req.params.ID);
+    User.findOne({_id: req.params.ID}, function(err, user) {
         if (err) {
             res.status(500).send(err);
             return;
@@ -99,18 +100,17 @@ exports.getUser = function(req, res) {
             res.status(400).send("Username not found");
             return;
         }
-        if(user.password != req.body.password){
-            res.status(400).send("Incorrect password!");
-            return;
-        }
         console.log("Current User: " + user);
-        res.json(user);
+        console.log('response JSON '+res.send(JSON.parse(JSON.stringify(user))));
+      // console.log('JSOn Res '+res.end(user.toJSON()));
+       // var a= res.json(user);
+       //  console.log('JSON Res '+a);
     });
 };
 
 exports.putUser = function(req, res) {
     console.log('updating user');
-    console.log(req.body);
+    console.log('backend user body'+req.body.email);
     // var img= req.file.mimetype;
     // console.log(img);
     //console.log('profile picture attr'+req.body.profilePicture);
@@ -118,9 +118,14 @@ exports.putUser = function(req, res) {
     User.find({username: req.body.username}, function(err, doc) {
 console.log('inside find');
         console.log(doc);
-         var condition= {username: req.body.username}
-         , update = {username : 'efgh' , email : 'abc2@gmail.com',dateOfBirth: req.body.birthday};
-       User.findOneAndUpdate(condition,update,{updert : true},function (err,doc) {
+         var condition= {_id: req.body._id}, update = {
+             username : 'efgh' ,
+             email : req.body.email,
+             dateOfBirth: req.body.birthday,
+             credo : req.body.credo
+         
+         };
+       User.findOneAndUpdate(condition,update,{update : true},function (err,doc) {
            console.log('inside update method');
            if(err) return res.send(500,{error : err});
            return res.send("success saved");

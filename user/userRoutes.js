@@ -10,7 +10,7 @@ console.log('in USer Router');
     router.post('/register', userController.register);
     router.post('/unregister', passport.authenticate('jwt', {session: false}),userController.unregister);
     router.get('/logout', userController.logout);
-    router.get('/user', userController.getUser);
+    router.get('/getUser/:ID', userController.getUser);
     router.post('/update', userController.putUser);
     router.delete('/user', userController.deleteUser);
     router.get('/users', userController.getUsers);
