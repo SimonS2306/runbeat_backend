@@ -118,13 +118,13 @@ exports.putUser = function(req, res) {
     // console.log(img);
     //console.log('profile picture attr'+req.body.profilePicture);
     //,dateOfBirth: req.body.,profileImagePath : req.body.data
-    User.find({username: req.body.username}, function(err, doc) {
+    User.find({_id: req.body._id}, function(err, doc) {
 console.log('inside find');
         console.log(doc);
          var condition= {_id: req.body._id}, update = {
-             username : 'efgh' ,
+             username : req.body.username,
              email : req.body.email,
-             dateOfBirth: req.body.birthday,
+             dateOfBirth: req.body.dateOfBirth,
              credo : req.body.credo
          
          };
