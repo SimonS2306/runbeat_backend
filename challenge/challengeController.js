@@ -26,6 +26,7 @@ exports.postChallenge = function(req, res) {
 //1: "Challenge requests": User is receiver who can accept/decline challenge
 // Needs as req the wanted receiver, gives back all the challenges were the user is the receiver
 
+/*TODO: mode=1 + receiver -> mode=2 + receiver will not be found*/
 exports.getChallenges_1 = function(req, res) {
     Challenge.find(function(err, challenges) {
         if (err) {
@@ -64,6 +65,7 @@ exports.updateChallenge3 = function(req, res) {
 //2: "Issued Challenges": User is sender and waits for receiver
 // Needs as req the wanted user who is the sender, gives back all pending challenges from the sender
 
+/*TODO: mode=2 + sender -> mode=1 + sender will not be found*/
 exports.getChallenges_2 = function(req, res) {
     Challenge.find(function(err, challenges) {
         if (err) {
@@ -79,6 +81,7 @@ exports.getChallenges_2 = function(req, res) {
 //3: Challenge accepted by sender and receiver
 // Needs as the request the challenge sender, gives back all ongoing challenges
 
+/*TODO: ongoing where user=receiver not found*/
 exports.getChallenges_3 = function(req, res) {
     Challenge.find(function(err, challenges) {
         if (err) {
@@ -115,7 +118,7 @@ exports.updateChallenge4 = function(req, res) {
 
 //4: Challenge finished
 //needs as request challenge sender, gives back all finished challenges
-
+/*TODO: history where user=receiver not found*/
 exports.getChallenges_4 = function(req, res) {
     Challenge.find(function(err, challenges) {
         if (err) {
