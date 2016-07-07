@@ -72,6 +72,7 @@ module.exports.register = function(req, res){
 
     user.username = req.body.username;
     user.password = req.body.password;
+    user.profileImagePath='file-1467914491858.jpg';
 
     user.save(function(err) {
         if (err) {
@@ -134,7 +135,6 @@ exports.getUser = function(req, res) {
 };
 
 exports.putUser = function(req, res) {
-
     console.log('updating user');
     if(!req.headers.authorization){
         res.status(400).send("You Ran Too Fast!!");
@@ -150,7 +150,8 @@ exports.putUser = function(req, res) {
             if(req.file){
                 profileAttr.profileImagePath = req.file.filename;
             }else {
-                profileAttr.profileImagePath = '';
+                profileAttr.profileImagePath = req.body.profileImagePath;
+                console.log(doc);
             }
             User.findOneAndUpdate({_id:req.body._id},profileAttr,{update : true},function (err,doc) {
                 console.log('inside update method');
