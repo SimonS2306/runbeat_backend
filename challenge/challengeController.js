@@ -120,37 +120,25 @@ exports.updateChallenge_2 = function(req, res) {
 
     Challenge.findByIdAndUpdate(
         req.params._id,
-        req.body,
-        {
-            mode: 2,
-            new: true,
-            //run validations
-            runValidators: true
-        }, function (err, challenge) {
+        { $set: { mode: 2 }}
+        , function (err, challenge) {
             if (err) {
                 res.status(500).send(err);
                 return;
             }
             res.json(challenge);
         });
-    console.log('Mode update to ongoing')
+    console.log('Mode update to finished')
 
 };
 
 
-
-//Update method for finished challenges (mode 2 ongoing->mode 3 finished)
 exports.updateChallenge_3 = function(req, res) {
 
     Challenge.findByIdAndUpdate(
         req.params._id,
-        req.body,
-        {
-            mode: 3,
-            new: true,
-            //run validations
-            runValidators: true
-        }, function (err, challenge) {
+        { $set: { mode: 3 }}
+        , function (err, challenge) {
             if (err) {
                 res.status(500).send(err);
                 return;
@@ -164,7 +152,7 @@ exports.updateChallenge_3 = function(req, res) {
 // Create endpoint /api/challenges/:challenge_id for GET
 exports.getChallenge = function(req, res) {
     // Use the Beer model to find a specific beer
-    Challenge.findById(req.params.challenge_id, function(err, challenge) {
+    Challenge.findById(req.params._id, function(err, challenge) {
         if (err) {
             res.status(500).send(err);
             return;
@@ -178,7 +166,7 @@ exports.getChallenge = function(req, res) {
 exports.putChallenge = function(req, res) {
     // Use the Beer model to find a specific beer
     Challenge.findByIdAndUpdate(
-        req.params.challenge_id,
+        req.params._id,
         req.body, 
         {
             //pass the new object to cb function
@@ -198,7 +186,7 @@ exports.putChallenge = function(req, res) {
 // Create endpoint /api/challenges/:challenge_id for DELETE
 exports.deleteChallenge = function(req, res) {
     // Use the Beer model to find a specific beer and remove it
-    Challenge.findById(req.params.challenge_id, function(err, m) {
+    Challenge.findById(req.params._id, function(err, m) {
         if (err) {
             res.status(500).send(err);
             return;
