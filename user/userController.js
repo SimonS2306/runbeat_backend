@@ -145,22 +145,14 @@ exports.putUser = function(req, res) {
             res.sendStatus(500);
             return;
         }
-        
         upload(req,res,function(err){
             var profileAttr = req.body;
-            console.log(req.file.filename);
-            profileAttr.profileImagePath = req.file.filename;
-
-            //console.log('PROFILE ATTR'+profileAttr);
-            var condition= {_id: req.body._id}, update = {
-                username : req.body.username,
-                email : req.body.email,
-                dateOfBirth: req.body.dateOfBirth,
-                credo : req.body.credo,
-                profileImagePath:profileAttr.profileImagePath
-            };
-
-            User.findOneAndUpdate(condition,update,{update : true},function (err,doc) {
+            if(req.file){
+                profileAttr.profileImagePath = req.file.filename;
+            }else {
+                profileAttr.profileImagePath = '';
+            }
+            User.findOneAndUpdate({_id:req.body._id},profileAttr,{update : true},function (err,doc) {
                 console.log('inside update method');
                 if(err) return res.send(500,{error : err});
                 return res.sendStatus(200);
