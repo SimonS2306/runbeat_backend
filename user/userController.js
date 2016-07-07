@@ -83,6 +83,10 @@ module.exports.logout = function(req,res){
 }
 
 module.exports.getUsers = function(req, res) {
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     User.find(function(err, users) {
         if (err) {
             res.status(500).send(err);
@@ -94,51 +98,55 @@ module.exports.getUsers = function(req, res) {
 
 exports.getUser = function(req, res) {
     console.log('Hello from get user '+req.params.ID);
+
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     User.findOne({_id: req.params.ID}, function(err, user) {
         if (err) {
-            res.status(500).send(err);
+            res.sendStatus(500);
             return;
         }
         if(!user){
-            res.status(400).send("Username not found");
+            res.status(400).send("User not found");
             return;
         }
         console.log("Current User: " + user);
-        console.log('response JSON '+res.send(JSON.parse(JSON.stringify(user))));
-      // console.log('JSOn Res '+res.end(user.toJSON()));
-       // var a= res.json(user);
-       //  console.log('JSON Res '+a);
+       res.send(JSON.parse(JSON.stringify(user)));
     });
 };
 
 exports.putUser = function(req, res) {
     console.log('updating user');
-    console.log('backend user body'+req.body.email);
-    // var img= req.file.mimetype;
-    // console.log(img);
-    //console.log('profile picture attr'+req.body.profilePicture);
-    //,dateOfBirth: req.body.,profileImagePath : req.body.data
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     User.find({_id: req.body._id}, function(err, doc) {
-console.log('inside find');
-        console.log(doc);
+        if(err){
+            res.sendStatus(500);
+            return;
+        }
          var condition= {_id: req.body._id}, update = {
              username : req.body.username,
              email : req.body.email,
              dateOfBirth: req.body.dateOfBirth,
              credo : req.body.credo
-         
          };
        User.findOneAndUpdate(condition,update,{update : true},function (err,doc) {
            console.log('inside update method');
            if(err) return res.send(500,{error : err});
-           return res.send("success saved");
-
+           return res.sendStatus(200);
        })
     });
-
 };
 
 exports.deleteUser = function(req, res) {
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     User.findById(req.params.user_id, function(err, m) {
         if (err) {
             res.status(500).send(err);
@@ -174,6 +182,10 @@ function createToken(user) {
 
 
 exports.getFriends = function(req, res){
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     User.findOne({username: req.params.name}, function(err, user){
         var data = [];
         if (user) {
@@ -200,6 +212,10 @@ exports.getFriends = function(req, res){
 
 
 exports.addFriendRequest = function(req, res){
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     var request = new FriendReq();
     request.sender = req.body.sender;
     request.receiver = req.body.receiver;
@@ -209,6 +225,10 @@ exports.addFriendRequest = function(req, res){
 }
 
 exports.deleteFriendRequest = function(req, res){
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     var id = req.params.id;
     var request = FriendReq.find({_id: id});
     request.remove(function (err, deletedreq){
@@ -221,6 +241,10 @@ exports.deleteFriendRequest = function(req, res){
 }
 
 exports.getFriendRequests = function(req, res){
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     var username = req.params.username;
     FriendReq.find({receiver: username}, function(err, requests){
         if (err) {
@@ -239,6 +263,10 @@ exports.getFriendRequests = function(req, res){
 }
 
 exports.acceptFriendRequest = function(req, res){
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     var id = req.params.id;
     FriendReq.findOne({_id: id}, function(err, request){
         if (err) {
@@ -306,6 +334,10 @@ exports.acceptFriendRequest = function(req, res){
 }
 
 exports.deleteFriend = function(req,res){
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     var username = req.body.username;
     var deletedFriend = req.body.deletedFriend;
 
@@ -353,6 +385,10 @@ exports.deleteFriend = function(req,res){
 }
 
 exports.searchUser = function(req, res){
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
     var username = req.params.username;
     User.find({username: {$regex: username, $options: 'i'}}, function(error, users){
         if (error) {
@@ -368,8 +404,9 @@ exports.searchUser = function(req, res){
 module.exports.uploadProfileImage = function(req, res){
 
     var name = req.params.username;
-    console.log(req.body);
-    console.log(req.file);
+    console.log('NAME'+ name);
+    console.log('BODY'+req.body);
+    console.log('FILE'+req.file);
 
     var type = req.file.mimetype;
     User.findOne({username: name}, function(err, user){
@@ -389,7 +426,10 @@ module.exports.uploadProfileImage = function(req, res){
 }
 
 module.exports.downloadProfileImage = function(req, res){
+    console.log('inside download');
     var pic_id = req.params.id;
+    console.log('pic+id' +pic_id);
+
     var path = "./uploads/" + pic_id;
 
     var mine = "image/jpeg";
