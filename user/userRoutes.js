@@ -27,6 +27,7 @@ console.log('in USer Router');
     router.get('/searchUser/:username', userController.searchUser);
     router.post('/image/upload/:username', upload.single("profileImage"), userController.uploadProfileImage);
     router.get('/image/:id', userController.downloadProfileImage);
+    router.get('/allsentfriendreq/:username', userController.getSentFriendRequests);
 
     return router;
 

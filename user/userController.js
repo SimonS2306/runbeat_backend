@@ -282,6 +282,29 @@ exports.getFriendRequests = function(req, res){
     });
 }
 
+
+exports.getSentFriendRequests = function(req, res){
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
+    var username = req.params.username;
+    FriendReq.find({sender: username}, function(err, requests){
+        if (err) {
+            res.status(500).json("sever is not available");
+            return;
+        }
+        var data = [];
+        // console.log(requests);
+        if (requests) {
+            res.status(200).json(requests);
+
+        } else {
+            res.status(200).json(data);
+        }
+    });
+}
+
 exports.acceptFriendRequest = function(req, res){
     if(!req.headers.authorization){
         res.status(400).send("You Ran Too Fast!!");
