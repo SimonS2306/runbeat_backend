@@ -3,7 +3,7 @@ var Config = require('./config/config.js');
 /**
  * db connect
  */
-
+var path=require('path');
 var mongoose = require('mongoose');
 mongoose.connect([Config.db.host, '/', Config.db.name].join(''),{
     //eventually it's a good idea to make this secure
@@ -54,3 +54,15 @@ app.use('/user', userRoutes(passport));
 module.exports = app;
 
 console.log(app.port);
+
+app.get('/files', function(req, res) {
+    // console.log("-----------------------------------------");
+    var str = req.url;
+    var re = str.split("?");
+    var upFolder = "./uploads/";
+    var upFile = upFolder.concat(re[1]).toString();
+
+    // console.log(upFolder);
+
+    res.sendFile(path.resolve(upFile));
+});

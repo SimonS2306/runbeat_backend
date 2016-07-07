@@ -9,6 +9,22 @@ var Grid = require("gridfs-stream");
 Grid.mongo = mongoose.mongo;
 var fs = require('fs');
 
+/*Profile Image Settings*/
+var storage = multer.diskStorage({ //multers disk storage settings
+    destination: function (req, file, cb) {
+        cb(null, './uploads/');
+    },
+    filename: function (req, file, cb) {
+        var datetimestamp = Date.now();
+        cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
+
+    }
+});
+
+var upload = multer({ //multer settings
+    storage: storage
+}).single('file');
+
 module.exports.login = function(req, res){
 
     if(!req.body.username){
@@ -118,6 +134,7 @@ exports.getUser = function(req, res) {
 };
 
 exports.putUser = function(req, res) {
+
     console.log('updating user');
     if(!req.headers.authorization){
         res.status(400).send("You Ran Too Fast!!");
@@ -128,17 +145,28 @@ exports.putUser = function(req, res) {
             res.sendStatus(500);
             return;
         }
-         var condition= {_id: req.body._id}, update = {
-             username : req.body.username,
-             email : req.body.email,
-             dateOfBirth: req.body.dateOfBirth,
-             credo : req.body.credo
-         };
-       User.findOneAndUpdate(condition,update,{update : true},function (err,doc) {
-           console.log('inside update method');
-           if(err) return res.send(500,{error : err});
-           return res.sendStatus(200);
-       })
+        
+        upload(req,res,function(err){
+            var profileAttr = req.body;
+            console.log(req.file.filename);
+            profileAttr.profileImagePath = req.file.filename;
+
+            //console.log('PROFILE ATTR'+profileAttr);
+            var condition= {_id: req.body._id}, update = {
+                username : req.body.username,
+                email : req.body.email,
+                dateOfBirth: req.body.dateOfBirth,
+                credo : req.body.credo,
+                profileImagePath:profileAttr.profileImagePath
+            };
+
+            User.findOneAndUpdate(condition,update,{update : true},function (err,doc) {
+                console.log('inside update method');
+                if(err) return res.send(500,{error : err});
+                return res.sendStatus(200);
+            })
+        });
+
     });
 };
 
@@ -408,7 +436,7 @@ module.exports.uploadProfileImage = function(req, res){
     console.log('BODY'+req.body);
     console.log('FILE'+req.file);
 
-    var type = req.file.mimetype;
+    //var type = req.file.mimetype;
     User.findOne({username: name}, function(err, user){
         if (err){
             res.status(500).send("Server is not available");
