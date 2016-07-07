@@ -5,12 +5,12 @@ var User = require('../user/userSchema');
 // Define our challenge schema
 var Challenge = new mongoose.Schema({
     title: String,
-    instruction: String,
-    difficulty: String,
-    mode: Number, //1: "Challenge requests": User is receiver who can accept/decline challenge
-                  //2: "Issued Challenges": User is sender and waits for receiver
-                  //3: Challenge accepted by sender and receiver
-                  //4: Challenge finished
+    index: Number,
+    //instruction: String,
+    //difficulty: String,
+    mode: Number, //1: "Challenge pending"
+                  //2: "Ongoing Challenge"
+                  //3: "Finished Challenge"
     sender : String,
     receiver: String
 });
