@@ -4,12 +4,15 @@ var User = require('../user/userSchema');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 
+//Create a challenge
+
 exports.postChallenge = function(req, res) {
 
     var challenge = new Challenge(req.body);
+    challenge.mode = 1;
 
     //do not allow user to fake identity. The user who posted the challenge must be the same user that is logged in
-    //if (!req.user.equals(challenge.participants.sender)) {
+    //if (!req.user.equals(challenge.sender)) {
     //    res.sendStatus(401);
 
 
@@ -23,31 +26,103 @@ exports.postChallenge = function(req, res) {
     });
 };
 
-//1: "Challenge requests": User is receiver who can accept/decline challenge
+//Get the methods you are looking for
+
+//1: "getReceived()": User is receiver who can accept/decline challenge
 // Needs as req the wanted receiver, gives back all the challenges were the user is the receiver
 
-/*TODO: mode=1 + receiver -> mode=2 + receiver will not be found*/
+
 exports.getChallenges_1 = function(req, res) {
-    Challenge.find(function(err, challenges) {
+    Challenge.find({ mode: 1, receiver: req.body.receiver},function(err, challenges) {
+        console.log("Requests for: " + req.body.receiver);
         if (err) {
             res.status(500).send(err);
             return;
         }
-        challenges = db.challenges.find({ mode: 1, receiver: req.body.receiver});
-        console.log(challenges);
+        //challenges = Challenge.find({ mode: 1, receiver: req.body.receiver});
+        //console.log(challenges);
         res.json(challenges);
     });
 };
+
+//2: "getSent()": User is sender and waits for receiver
+// Needs as req the wanted user who is the sender, gives back all pending challenges from the sender
+
+exports.getChallenges_2 = function(req, res) {
+    Challenge.find({ mode: 1, sender: req.body.sender},function(err, challenges) {
+        console.log("Requests from: " + req.body.sender);
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        //challenges = Challenge.find({ mode: 1, receiver: req.body.receiver});
+        //console.log(challenges);
+        res.json(challenges);
+    });
+};
+
+//3: "getOngoing()"
+// Needs as the request the username for sender/receiver, gives back all ongoing challenges for that user
+//req example: sender: simon, receiver: simon
+
+exports.getChallenges_3 = function(req, res) {
+    Challenge.find({
+            $or: [
+                {mode: 2, sender: req.body.sender},
+                {mode: 2, receiver: req.body.receiver}]
+        },
+
+        function (err, challenges) {
+
+            console.log("Ongoings for: " + req.body.receiver);
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            //challenges = Challenge.find({ mode: 1, receiver: req.body.receiver});
+            //console.log(challenges);
+            res.json(challenges);
+
+        });
+};
+
+//4: getHistory()
+//needs as request challenge sender, gives back all finished challenges
+//req example: sender: simon, receiver: simon
+
+exports.getChallenges_4 = function(req, res) {
+    Challenge.find({
+            $or: [
+                {mode: 4, sender: req.body.sender},
+                {mode: 4, receiver: req.body.receiver}]
+        },
+
+        function (err, challenges) {
+
+            console.log("History for: " + req.body.receiver);
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            //challenges = Challenge.find({ mode: 1, receiver: req.body.receiver});
+            //console.log(challenges);
+            res.json(challenges);
+
+        });
+};
+
+//Update Methods
+
 
 //Update status for getChallenge_1 and getChallenge_2, when challenge has been accepted
 
-exports.updateChallenge3 = function(req, res) {
+exports.updateChallenge_2 = function(req, res) {
 
     Challenge.findByIdAndUpdate(
-        req.params.challenge_id,
+        req.params._id,
         req.body,
         {
-            status: 3,
+            mode: 2,
             new: true,
             //run validations
             runValidators: true
@@ -58,50 +133,20 @@ exports.updateChallenge3 = function(req, res) {
             }
             res.json(challenge);
         });
-    console.log('Status update to 3')
+    console.log('Mode update to ongoing')
 
 };
 
-//2: "Issued Challenges": User is sender and waits for receiver
-// Needs as req the wanted user who is the sender, gives back all pending challenges from the sender
 
-/*TODO: mode=2 + sender -> mode=1 + sender will not be found*/
-exports.getChallenges_2 = function(req, res) {
-    Challenge.find(function(err, challenges) {
-        if (err) {
-            res.status(500).send(err);
-            return;
-        }
-        challenges = db.challenges.find({ mode: 2, sender: req.body.sender});
-        console.log(challenges);
-        res.json(challenges);
-    });
-};
 
-//3: Challenge accepted by sender and receiver
-// Needs as the request the challenge sender, gives back all ongoing challenges
-
-/*TODO: ongoing where user=receiver not found*/
-exports.getChallenges_3 = function(req, res) {
-    Challenge.find(function(err, challenges) {
-        if (err) {
-            res.status(500).send(err);
-            return;
-        }
-        challenges = db.challenges.find({ mode: 3, sender: req.body.sender});
-        console.log(challenges);
-        res.json(challenges);
-    });
-};
-
-//Update method for Challenges that are completed and are now in the finished section after calling the function (status =4)
-exports.updateChallenge4 = function(req, res) {
+//Update method for finished challenges (mode 2 ongoing->mode 3 finished)
+exports.updateChallenge_3 = function(req, res) {
 
     Challenge.findByIdAndUpdate(
-        req.params.challenge_id,
+        req.params._id,
         req.body,
         {
-            status: 4,
+            mode: 3,
             new: true,
             //run validations
             runValidators: true
@@ -112,26 +157,9 @@ exports.updateChallenge4 = function(req, res) {
             }
             res.json(challenge);
         });
-    console.log('Status update to 4')
+    console.log('Mode update to finished')
 
 };
-
-//4: Challenge finished
-//needs as request challenge sender, gives back all finished challenges
-/*TODO: history where user=receiver not found*/
-exports.getChallenges_4 = function(req, res) {
-    Challenge.find(function(err, challenges) {
-        if (err) {
-            res.status(500).send(err);
-            return;
-        }
-        challenges = db.challenges.find({ mode: 4, sender: req.body.sender });
-        console.log(challenges);
-        res.json(challenges);
-    });
-};
-
-
 
 // Create endpoint /api/challenges/:challenge_id for GET
 exports.getChallenge = function(req, res) {
