@@ -134,6 +134,28 @@ exports.getUser = function(req, res) {
     });
 };
 
+exports.getUserWithName = function(req, res) {
+    console.log('Hello from get user '+req.params.ID);
+
+    if(!req.headers.authorization){
+        res.status(400).send("You Ran Too Fast!!");
+        return;
+    }
+    User.findOne({username: req.params.username}, function(err, user) {
+        if (err) {
+            res.sendStatus(500);
+            return;
+        }
+        if(!user){
+            res.status(400).send("User not found");
+            return;
+        }
+        console.log("Current User: " + user);
+        res.send(JSON.parse(JSON.stringify(user)));
+    });
+};
+
+
 exports.putUser = function(req, res) {
     console.log('updating user');
     if(!req.headers.authorization){
